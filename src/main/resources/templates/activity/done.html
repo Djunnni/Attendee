@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/main_layout}">
+
+<head layout:fragment="header">
+	<title id="Title">Attendee [[${activity.getAname()}]]</title>
+	<style>
+		.nodisplay {
+			display: none;
+		}
+		input#name {
+			border:1px solid; 
+			padding-left:10px;
+			height:38px;
+			border-radius:8px;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<div id="ActivityPage" class="col-md-6 col-md-offset-3 pr-0 pl-0" layout:fragment="content">
+	<div class="bg-light p-3 mb-4 mt-5">
+		<span class="font-weight-bold mb-4">현재 진행중인 출석</span>
+		<div class="text-center mt-3">
+		<p class="dropdown-item-text mb-2" th:text="${activity.getAname()}"></p>
+		<p class="font-weight-lighter" th:text="${#temporals.format(activity.getRegdate())}"></p>
+		</div>
+	</div>
+	<p id="attend-alert" class="font-weight-lighter text-center"> 출석되었습니다 : ) </p>
+</div>
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+</script>
+</th:block>
+</html>

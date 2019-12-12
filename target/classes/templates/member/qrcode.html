@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/member_layout2}">
+
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+	<script type="text/javascript" src="/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="/js/html2canvas.min.js"></script>
+	<script type="text/JavaScript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+	<style>
+		.nodisplay {
+			display: none;
+		}
+		tr {
+		    height: 2.3em;
+		}
+		#qrDiv {
+			display: inline-block;
+		    padding: 30px 30px 15px 30px;
+		}
+		#qr {
+			display: inline-block;
+		    border: 5px solid #007bff;
+		    border-radius: 15px;
+    	}
+    	#attendee {
+    		font-size:5px;
+    		color:gray;
+    		padding-bottom:5px;
+    	}
+    	#qrName {
+    		font-weight:500;
+    		padding-bottom:5px;
+    	}
+	</style>
+</head>
+
+<div id="QRPage" class="col-md-6 col-md-offset-3 pr-0 pl-0 text-center" layout:fragment="content">
+	<p class="mb-5 mt-4">아래의 QR Code 를 통해 접속하실 수 있습니다.</p>
+	<div id="qr">
+		<a id="target" style="display: none"></a>
+		<div id="qrDiv"></div>
+		<div id="qrName" class="font-bolder">[[${qrname}]]</div>
+		<div id="attendee">@Attendee</div>
+	</div>
+	<p id="download_qrCode" class="mt-5 text-primary font-weight-bolder">QR Code 다운로드</p>
+	<a id="kakao-link-btn" class="mt-2 btn btn-outline-warning ">
+		카카오톡으로 공유하기 
+	</a>
+</div>	
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+$(document).ready(()=>{
+	$('#qrDiv').qrcode(
+			{
+				width: 150,
+				height: 150,
+				text: [[${qrcodeurl}]]
+			});
+				
+});
+$('#brand').click(()=>{location.href="/member/home"});
+
+function back(){
+	location.href="/member/home";
+}
+var downloadBtn = document.getElementById("download_qrCode");
+downloadBtn.addEventListener('click',()=>{
+	console.log("download 를 시작합니다.")
+	html2canvas(document.getElementById("qr")).then(function(canvas) {
+		 
+		 var el =  document.getElementById("target");
+		 el.href = canvas.toDataURL("imgage/png");
+		el.download=[[${qrname}]]+'.png';
+		el.click();
+	});
+});
+
+Kakao.init('c44d07e9d9ba8dd5a178904a2a685bbc');
+Kakao.Link.createDefaultButton({
+  container: '#kakao-link-btn',
+  objectType: 'feed',
+  content: {
+    imageUrl :"https://attendee.ml/imgs/profile-logo.png",
+    imageWidth : 330,
+    imageHeight : 330,
+    title: [[${qrname}]],
+    description: [['Attendee 에서 간편하게 출석하세요. : )']],
+    link: {
+      mobileWebUrl: [[${qrcodeurl}]],
+      webUrl: [[${qrcodeurl}]]
+    }
+  },
+  buttons: [ {
+      title: '출석하기',
+      link: {
+        mobileWebUrl: [[${qrcodeurl}]],
+        webUrl: [[${qrcodeurl}]]
+      }
+    }
+  ]
+});
+
+</script>
+</th:block>
+</html>

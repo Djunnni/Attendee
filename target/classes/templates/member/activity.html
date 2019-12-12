@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/member_layout2}">
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+	<style>
+		.nodisplay {
+			display: none;
+		}
+		tr {
+		    height: 2.3em;
+		}
+		img#csvDownload::after {
+			content: attr(alt);
+		}
+	</style>
+</head>
+<div id="ActiveM-Page" class="col-md-6 col-md-offset-3 pr-0 pl-0 text-center" layout:fragment="content">
+	<div id="activity-info" class="border-bottom">
+		<h5 th:text="${activity_name}"></h5>
+		<p th:text="${#temporals.format(activity_date,'yyyy년 MM월 dd일 a h시 mm분')}">생성시간</p>
+		<p class="small w-50" style="float:left">참석 인원 : [[${#lists.size(userlist)}]] </p>
+		<p class="small w-50" style="float:right">
+			현재 상태 : <span th:if="!${activity_status}" class="text-success" >진행중</span> 
+				  <span th:if="${activity_status}" class="text-danger">종료됨</span> 
+		</p>
+		<!-- Options -->
+		<table id="option" class="w-100 border-top">
+			<tbody>
+		        <tr> 
+		            <td class="border-right">
+						<!-- csv 다운로드 받기 -->
+						<img th:if="!${activity_status}" id="activity_csv_off" class="m-1" alt="일정 다운로드 X" src="/imgs/csv_icon_off.png" width=32px height=32px />
+						<a th:href="'/member/download/'+${url}" th:if="${activity_status}"><img id="activity_csv_on" class="m-1" alt="일정 다운로드" src="/imgs/csv_icon.png" width=32px height=32px />
+						</a>
+					</td>
+					<td class="border-right">
+						<!-- 일정 상태변경하기 -->
+						<button onclick="activityChange()" th:if="${activity_status}" class="btn btn-success" id="activity_status">시작하기</button>
+						<button onclick="activityChange()" th:if="!${activity_status}" class="btn btn-danger" id="activity_status">종료하기</button>
+					</td>
+		            <td>
+		            	<!-- 일정 삭제하기 -->
+						<img id="activity_delete" class="m-1" alt="일정 삭제하기" src="/imgs/delete.png" width=32px height=32px />
+		            </td>
+		        </tr>
+		    </tbody>
+		</table>
+		
+	</div>
+	<div id="user_table">
+		<table class="w-100">
+			<tbody th:each="user,iterStat : ${userlist}" class="border-bottom" >
+				<tr>
+					<th rowspan="3" class="border-right p-3">[[${iterStat.index + 1}]]</th>
+					<th>이름</th>
+					<td>[[${user.username}]]</td>
+				</tr>
+				<tr th:class="${iterStat.last}? 'border-bottom'">
+					<th>출석시간</th>
+					<td class="small">[[${#temporals.format(user.regdate)}]]</td>
+				</tr>
+			</tbody>
+		</table> 
+	</div>
+</div>
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+$(function(){
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+	
+	$('body').height($(window).height());
+	$('#user_table').height($('body').height()-$('#activity-info').height()-56);
+	$('#user_table').css('overflow-y','scroll');
+	
+});
+activityChange = function(){
+	$.ajax({
+		url: [[${#httpServletRequest.requestURI}+'/statusChange']],
+		method: "POST",
+		success: ()=>{
+			location.reload();
+		},
+		error: (e)=>{
+			window.alert('상태가 변경되지 않았습니다.\n나중에 다시 시도해주세요.');
+		}
+	})
+}
+
+$('#activity_csv_off').click(()=>{
+	alert("행사를 종료하셔야 다운로드 할 수 있습니다 : )");
+});
+$('#activity_delete').click(()=>{
+	var ok = confirm("일정을 삭제하시겠습니까?\n복구하실 수 없습니다.");
+	if(ok == true) {
+		console.log("삭제를 진행합니다.");
+		$.ajax({
+			url: [[${#httpServletRequest.requestURI}+'/delete']], 
+			method: "POST",
+			contentType: 'application/json',
+			success: (data)=>{
+				location.href="/member/home";
+			},
+			error: (e)=>{
+				window.alert('삭제에 실패하였습니다.\n나중에 다시 시도해주세요.');
+				console.log(e);
+			}
+			
+		});  
+	} else {
+		console.log("삭제를 취소합니다.");
+	}
+});
+$('#brand').click(()=>{location.href="/member/home"});
+
+function back(){
+	location.href="/member/home";
+}
+</script>
+</th:block>
+</html>

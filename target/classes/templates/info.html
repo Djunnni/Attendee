@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/main_layout}">
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+</head>
+
+		
+<!-- 일정, 제목 -->
+<div id="InfoPage" class="pt-1 pb-3 text-center" layout:fragment="content">
+	information Page
+</div>	
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+</script>
+</th:block>
+</html>

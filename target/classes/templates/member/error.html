@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/member_layout2}">
+
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+	<script type="text/javascript" src="/js/jquery.qrcode.min.js"></script>
+</head>
+
+<div id="ErrorPage" class="pt-1 pb-3 text-center" layout:fragment="content">
+	<p class="mb-4">존재하지 않는 일정입니다.</p>
+	
+</div>	
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+
+$('#brand').click(()=>{location.href="/member/home"});
+
+function back(){
+	location.href="/member/home";
+}
+</script>
+</th:block>
+</html>

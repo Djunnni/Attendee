@@ -1,0 +1,57 @@
+a {
+	text-decoration: none;
+}
+
+footer {
+	position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+/* ========== loginPage 시작 ========== */
+#loginPage #signinForm table {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+#loginPage #signinForm table tr {
+	height:50px;
+}
+#loginPage #signinForm table tr td > * {
+	height: 2.5em;
+	line-height:2.5em;
+	font:2.5em;
+}
+/* ========== loginPage 끝 ========== */
+
+/* ========== signupPage 시작 ========== */
+#signupPage #signupForm table {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+#signupPage #signupForm table tr {
+	height:42px;
+}
+#signupPage #signupForm table tr td > * {
+	height: 2.5em;
+	line-height:2.5em;
+	font:2.5em;
+}
+/* ========== signupPage 끝 ========== */
+
+/* ========== MemberPage 시작 ========== */
+#MemberPage #qr-code {
+	background-position: center;
+    background-repeat: no-repeat;
+    width: 2rem;
+    height: 2rem;
+    background-image: url(/imgs/qr-code.png);
+}
+#MemberPage #is_activity{
+
+}
+/* ========== MemberPage 끝 ========== */
+#logout{
+	background-image: url(/imgs/logout.png);
+    background-size: contain;
+    width: 24px;
+    height: 24px;
+}

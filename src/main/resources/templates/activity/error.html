@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/main_layout}">
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+</head>
+
+<div id="ActivityErrorPage" class="col-md-6 col-md-offset-3 pr-0 pl-0 text-center" layout:fragment="content">
+	<div class="pt-1 pb-3">
+			<div class="text-center p-3 mb-4">
+				<span class="float-left font-weight-bold mb-3">현재 진행중인 출석이 없습니다.</span>
+			</div>
+		</div>
+</div>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/member_layout}">
+
+
+<head layout:fragment="header">
+	<title id="Title">Attendee</title>
+	<style>
+		.nodisplay {
+			display: none;
+		}
+		tr {
+		    height: 2.3em;
+		}
+	</style>
+</head>
+
+
+		
+<!-- 일정, 제목 -->
+<div id="MemberPage" class="col-md-6 col-md-offset-3 pr-0 pl-0" layout:fragment="content">
+	<!-- 일정 추가하기 -->
+		<div class="pt-1 pb-1 mb-1 border-bottom">
+			<div class="mb-1 text-center">
+				<div id="add_activity_btn" class="font-weight-bold mb-2 btn btn-info">일정 추가하기</div>
+				<div id="add_activity_box" class="w-100 nodisplay">
+					<div class="bg-light text-center p-3 mb-2">
+					<p class="font-weight-bold mb-3 text-left">일정 추가하기</p>
+						<div class="mb-4">
+							<span class="mr-3">이름 :</span><input type=text name="act_name" id="act_name">
+						</div>
+						<div>
+							<button id="add" type="button" class="btn btn-success pr-3 pl-3 mr-1">추가</button>
+							<button id="cancel" type="button" class="btn btn-danger pr-3 pl-3 ml-1">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+		<!-- 현재 일정 -->
+		<div id="is_activity" class="">
+				 <div th:each="act : ${boardList}" class="text-center border mb-2 p-3">
+					 <a class="p-2" id="qr-code" style="display: inline-flex;" th:href="@{'/member/code/'+${act.dummyURL}}"></a>
+			         <h5>[[${act.aname}]]</h5>
+		          	 <p class="small" th:text="${#temporals.format(act.regdate,'yyyy-MM-dd a h:mm')}"></p>
+			         <a th:href="@{'/member/activity/'+${act.dummyURL}}">출석 확인하기</a>
+			     </div>
+			     <!-- nav -->
+			     <nav  th:if="${!boardList.empty}">
+				    <ul class="pagination justify-content-center"
+				        th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
+				                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+	                    
+	                    <!-- 이전 페이지 -->
+				        <li class="page-item" th:classappend="${boardList.first} ? 'disabled'">
+				            <a th:href="${boardList.first} ? '#' :@{/member/home(page=${boardList.number})}" aria-label="Previous">
+				                <span class="page-link" aria-hidden="true">&laquo;</span>
+				            </a>
+				        </li>
+						<!-- 페이지 목록 -->
+				        <li class="page-item" th:each="page: ${#numbers.sequence(start, last)}" th:classappend="${page == boardList.number + 1} ? 'active'">
+				           	<span class="page-link" th:if="${page == boardList.number + 1}">
+				           	[[${page}]]
+				           		  <span class="sr-only">(current)</span>
+				           	</span>
+				            <a class="page-link" th:if="${page != boardList.number + 1}" th:text="${page}" th:href="@{/member/home(page=${page})}">
+				            </a>
+				        </li>
+						
+						<!-- 다음 페이지 -->
+				        <li class="page-item" th:classappend="${boardList.last} ? 'disabled'">
+				            <a th:href="${boardList.last} ? '#' : @{/member/home(page=${boardList.number + 2})}" aria-label="Next">
+				                <span class="page-link" aria-hidden="true">&raquo;</span>
+				            </a>
+				        </li>
+				    </ul>
+				</nav>
+			    
+		</div>
+</div>	
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+$(function() {
+	$('body').height($(window).height());
+	$('#is_activity').height($('body').height()-126);
+	$('#is_activity').css('overflow-y','scroll');
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+});
+	$('#add_activity_btn').click((e)=>{
+		var current = $('#'+e.target.id);
+		e.preventDefault(); 	
+		current.addClass("nodisplay");
+		$('#add_activity_box').removeClass("nodisplay");
+	});
+	$('#add_activity_box #cancel').click(()=>{
+		$('#add_activity_box').addClass("nodisplay");
+		$('#add_activity_btn').removeClass("nodisplay");
+	});
+	$('#add_activity_box #add').click(()=>{
+		var titlename = $('#act_name').val();
+		if(titlename === "") {
+			window.alert("이름을 입력해주세요.");
+			return false;
+		}
+		$.ajax({
+			url: "/member/home/add", 
+			data: { name: titlename }, 
+			method: "POST",
+			dataType: "json", // 서버에서 보내줄 데이터의 타입
+			success: (data)=>{
+				location.reload();
+			},
+			error: (e)=>{
+				window.alert('입력에 실패하였습니다. 다시한번 입력해주세요');
+				console.log(e);
+			}
+			
+		});  
+	
+	});
+	$('#brand').click(()=>{location.href="/member/home"});
+
+</script>
+</th:block>
+</html>	

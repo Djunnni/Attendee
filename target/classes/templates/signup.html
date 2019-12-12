@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/main_layout}">
+
+<head layout:fragment="header">
+	<title id="Title">Attendee 회원가입</title>
+	<style>
+		table {
+			font-size: 0.875rem;
+		}
+		tr.info {
+			height: 2px !important;
+		    text-align: left;
+		    font-size: 12px;
+		    color: gray;
+		    font-weight: 500;
+	    }
+	    body {
+	    	overflow:auto !important;
+	    }
+	</style>
+</head>
+
+<!-- 	<input type="hidden" th:name="${_csrf.paremeterName }" th:value="${_csrf.token }"/>  -->
+<!-- 일정, 제목 -->
+<div id="signupPage" class="pl-0 pr-0 col-md-6 col-md-offset-3" layout:fragment="content">
+	<div class="text-center">
+		<span class="float-left font-weight-bold ">회원가입</span>
+		<form id="signupForm" th:action="@{/signup/add}" method="post" accept-charset="UTF-8">
+			<table style="clear:both" class="w-100 mb-4">
+				<tbody>
+					<tr class="info">
+						<td> 사용자 정보</td> 
+					</tr>
+					<tr>
+						<td class="col-sm-6 text-left pr-0"> 이메일 </td>
+						<td class="col-sm-6"> <input type="text" id="uemail" name="uemail" style="border:1px solid; padding-left:10px; border-radius:8px;"></td>
+					</tr>
+					<tr class="info"> 
+						<td>사용자 계정<td> 
+					</tr>
+					<tr>
+						<td class="col-sm-6 text-left pr-0"> 아이디 </td>
+						<td class="col-sm-6"> <input type="text" id="uid" name="uid" style="border:1px solid; padding-left:10px; border-radius:8px;"></td>
+					</tr>
+					<tr>
+						<td class="col-sm-6 text-left pr-0"> 비밀번호 </td>
+						<td class="col-sm-6"> <input type="password" id="upw" name="upw" style="border:1px solid; padding-left:10px; border-radius:8px;" autocomplete=none></td>
+					</tr>
+					<tr>
+						<td class="col-sm-6 text-left pr-0"> 비밀번호 확인 </td>
+						<td class="col-sm-6"> <input type="password" id="re_upw" name="re_upw" style="border:1px solid; padding-left:10px; border-radius:8px;" autocomplete=none></td>
+					</tr>
+				</tbody>
+			</table>
+			<div th:if="${error} == 'idExist'">
+				<p class="text-danger">이미 해당 아이디가 존재합니다.</p>
+			</div>
+			<div th:if="${error} == 'passwordNotEqual'">
+				<p class="text-danger">비밀번호를 다시 확인해주세요.</p>
+			</div>
+			<div th:if="${error} == 'emailError'">
+				<p class="text-danger">존재하지 않는 이메일 입니다.</p>
+			</div>
+			
+			<a onclick="javascript:process();" class="btn border-dark mr-1" style="width:30%;">가입하기</a>
+			<a onclick="javascript:cancel();" class="btn border-dark ml-1" style="width:30%;">취소</a>
+		</form>
+	</div>
+	
+</div>
+
+<div class="bg-light text-left p-2 mb-3">
+				<span class="float-left font-weight-bold mb-3">개인정보 처리방침 안내</span>
+				<div class="w-100" style="clear:both;">
+					<span style="font-size:0.8rem">자세한 사항은 <a th:href="@{/private}">여기</a>서 확인하실 수 있습니다.</span>
+				</div>
+</div>
+
+
+<th:block layout:fragment="script">
+<script th:inline="javascript">
+function join(){
+	var pw = $('#upw').val();
+	var re_pw = $('#re_upw').val();
+	if(pw==re_pw){
+		var yes = window.confirm("이메일 인증을 해주셔야 이용하실 수 있습니다. : )");
+		if(yes){
+			$('#signupForm').submit();
+		}
+	} else {
+		window.alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+		$('#re_upw').val("");
+	}
+}
+function checkEmail(){
+	var email = document.querySelector('#uemail').value;
+	var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+	if(exptext.test(email) == false) {
+		alert("이메일형식이 올바르지 않습니다."); 
+					return false; 
+	}
+	return true; 
+}
+function process(){
+	var isValid=true;
+	$('#signupForm input').each((index,item)=>{
+		let value = item.value; 
+		if(value=="" || value==undefined){
+			isValid=false;
+		}
+	})
+	if(isValid && checkEmail()){
+		join();
+	} else {
+		window.alert('전부 입력을 해주셔야 합니다 : )');
+	}
+}
+
+
+function cancel(){
+	location.href="/";
+}
+</script>
+</th:block>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- Header -->
+<head lang="ko" th:fragment="header">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title th:include=":: #Title">Check your page title</title>
+	<!-- css, js -->
+	<link rel="stylesheet" href="../static/css/custom.css" th:href="@{/css/custom.css}" />
+	<!--  Boot Strap -->
+	<link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+
+</head>
+
+<!-- Body -->
+<body style="overflow:hidden;">
+	<div class="container-fluid  pr-0 pl-0">
+		<nav class="navbar navbar-light">
+  			<span id="brand" class="navbar-brand m-0 h1">Attendee
+  			</span>
+		</nav>
+		
+		<div layout:fragment="content">
+			
+		</div>
+	</div>
+</body>
+
+<!--  JQuery -->
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<th:block layout:fragment="script"></th:block>
