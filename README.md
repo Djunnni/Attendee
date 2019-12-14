@@ -5,6 +5,9 @@ Springboot 2.x 기반 웹 어플리케이션으로 만든 출석부입니다.
 본 서비스에 대한 설명은 아래를 참고해주시면 됩니다.
 - [서비스 구축과정 설명 동영상](https://youtu.be/v87pSEFIT9w)
 - [서비스 구축과정 설명 PPT](https://www.slideshare.net/LEEDONGJOON1/attendeespringboot-webapp-203723069)
+- 실행 영상(youtube)
+
+[![Video Label](https://img.youtube.com/vi/pNq9XJzBbtI/0.jpg)](https://youtu.be/pNq9XJzBbtI)
 
 ### 동작환경
 
